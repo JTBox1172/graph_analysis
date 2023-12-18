@@ -1,6 +1,7 @@
 import networkx as nx 
 import matplotlib.pyplot as plt
 import pandas as pd
+import csv
 from networkx.readwrite import json_graph
 from typing import List
 import json
@@ -10,7 +11,6 @@ def get_graph(df, src: str, dest: str):
     G.name = "graph from pandas adjacency matrix"
     jsonGraph = json_graph.node_link_data(G)
     json.dumps(jsonGraph)
-    print(jsonGraph)
     return jsonGraph
 
 def convert_csv_to_dataframe(filePath):
@@ -20,3 +20,15 @@ def convert_csv_to_dataframe(filePath):
 def convert_xls_to_dataframe(filePath):
     df = pd.read_excel(filePath)
     return df
+
+def getHeaders(filePath, fileType):
+    if(fileType == ".csv"):
+        with open(filePath, 'r') as infile:
+            reader = csv.DictReader(infile)
+            headers = reader.fieldnames
+    elif(fileType == ".xls" or fileType == ".xlsx"):
+        headers = []
+        # todo
+    else:
+        headers = []
+    return list(headers)

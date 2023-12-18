@@ -16,10 +16,10 @@ async def graph_ping():
     }
     return JSONResponse(status_code=status, content=content)
 
-@router.get("/get_graph")
-async def get_graph(body: graph_request_body.Graph_Request_Body):
+@router.post("/get_graph")
+async def get_graph(data: graph_request_body.Graph_Request_Body):
     status = 200
-    filePath = body.filePath
+    filePath = data.filePath
     fileType = os.path.splitext(filePath)[1]
     if fileType == ".csv":
         df = graph_service.convert_csv_to_dataframe(filePath)
@@ -27,7 +27,7 @@ async def get_graph(body: graph_request_body.Graph_Request_Body):
         df = graph_service.convert_xls_to_dataframe(filePath)
     else:
         df = pd.DataFrame
-    graph = graph_service.get_graph(df, body.src, body.dest)
+    graph = graph_service.get_graph(df, data.src, data.dest)
     response = {
         "data": {
             "graph": graph
@@ -44,9 +44,11 @@ async def post_data(file: UploadFile = File(...)):
     uploaded_file_path=f"user_data/uploaded_data/uploaded_{unique_id}{fileType}"
     with open(uploaded_file_path, "wb") as buffer:
         buffer.write(file.file.read())
+    fileHeaders = graph_service.getHeaders(uploaded_file_path, fileType)
     response = {
         "data": {
-            "filePath": uploaded_file_path
+            "filePath": uploaded_file_path,
+            "fileHeaders": fileHeaders
         }
     }
     return JSONResponse(status_code=status, content=response)

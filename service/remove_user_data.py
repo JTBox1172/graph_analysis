@@ -11,13 +11,13 @@ def cleanUp():
         return_files = [f for f in os.listdir(return_data_path) if os.path.isfile(os.path.join(return_data_path, f))]
         uploaded_files = [f for f in os.listdir(uploaded_data_path) if os.path.isfile(os.path.join(uploaded_data_path, f))]
         for file in return_files:
-            print(file)
+            print(f"removing {file}")
             file_path = os.path.join(return_data_path, file)
             time_stored = (int((datetime.datetime.now()).timestamp())) - (os.path.getctime(file_path))
             if(time_stored > 300):
                 os.remove(file_path)
         for file in uploaded_files:
-            print(file)
+            print(f"removing {file}")
             file_path = os.path.join(uploaded_data_path, file)
             time_stored = (int((datetime.datetime.now()).timestamp())) - (os.path.getctime(file_path))
             if(time_stored > 300):
